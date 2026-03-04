@@ -1,0 +1,37 @@
+# Prediction arbitrage daemon - default config
+# WS URLs are optional; built-in defaults used when omitted:
+#   Kalshi: wss://api.elections.kalshi.com/trade-api/ws/v2 (prod) or demo
+#   Polymarket: wss://ws-subscriptions-clob.polymarket.com/ws/market
+
+environment: demo
+logLevel: info
+
+postgres:
+  host: localhost
+  port: 5432
+  user: trader
+  password: changeme
+  database: prediction_arb
+
+exchanges:
+  polymarket:
+    reconnectDelayMs: 3000
+    # marketSlug: btc-updown-15m-{timestamp}  # omit for auto current-15m
+  kalshi:
+    reconnectDelayMs: 3000
+    marketTicker: KXBTC15M  # Bitcoin 15m up/down series
+
+risk:
+  maxCapitalPerTrade: 100
+  maxDailyLoss: 500
+  staleQuoteMs: 5000
+  liquidityThreshold: 1000
+  cooldownMs: 10000
+
+strategy:
+  edgeThreshold: 0.02
+  maxSlippageBps: 50
+  feeBps: 20
+
+meta:
+  llmAgent: ""
