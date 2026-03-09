@@ -396,6 +396,8 @@ If you're working on:
 
 feel free to reach out.
 
+**Contact:** [Telegram](https://t.me/snipmaxi)
+
 ---
 
 # License
